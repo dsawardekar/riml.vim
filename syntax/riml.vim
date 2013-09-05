@@ -20,26 +20,26 @@ endif
 " load vim syntax for :cmd
 syn include @rimlVim syntax/vim.vim
 
-syn match rimlStatement  /\v(return|break|continue|throw)/ 
+syn match rimlStatement  /\v<(return|break|continue|throw)>/ 
 hi def link rimlStatement Statement
 
-syn match rimlRepeat /\v(for|while)/ 
+syn match rimlRepeat /\v<(for|while)>/ 
 hi def link rimlRepeat Repeat
 
-syn match rimlConditional /\v(if|else|unless|elseif)/ 
+syn match rimlConditional /\v<(if|else|unless|elseif)>/ 
 hi def link rimlConditional Conditional
 
-syn match rimlException /\v(try|catch|finally)/ 
+syn match rimlException /\v<(try|catch|finally)>/ 
 hi def link rimlException Exception
 
-syn match rimlKeyword /\v(new|super)/ 
-syn match rimlKeyword /\vfor\s+\S+\s+(in)/ contained containedin=rimlRepeat 
+syn match rimlKeyword /\v<(new|super)>/ 
+syn match rimlKeyword /\v<for\s+\S+\s+(in)/ contained containedin=rimlRepeat 
 hi def link rimlKeyword Keyword
 
-syn match rimlBoolean /\v(true|false)/ 
+syn match rimlBoolean /\v<(true|false)>/ 
 hi def link rimlBoolean Boolean
 
-syn match rimlSpecialVar /\v(self|super)/ 
+syn match rimlSpecialVar /\v<(self|super)>/ 
 hi def link rimlSpecialVar Special
 
 syn match rimlObject /\v\s+\u\w*/
