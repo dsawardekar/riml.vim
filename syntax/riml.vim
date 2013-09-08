@@ -72,7 +72,14 @@ hi def link rimlObjAssign Identifier
 syn keyword rimlTodo TODO FIXME XXX contained
 hi def link rimlTodo Todo
 
-syn match rimlComment /^".*/ contains=@Spell,rimlTodo
+" from vim.vim
+syn keyword rimlTodo contained	COMBAK	FIXME	TODO	XXX KLUDGE
+syn cluster rimlCommentGroup	contains=rimlTodo,@Spell
+
+syn match	rimlComment	excludenl +\s"[^\-:.%#=*].*$+lc=1	contains=@rimlCommentGroup,rimlCommentString
+syn match	rimlComment	+\<endif\s\+".*$+lc=5	contains=@rimlCommentGroup,rimlCommentString
+syn match	rimlComment	+\<else\s\+".*$+lc=4	contains=@rimlCommentGroup,rimlCommentString
+syn region	rimlCommentString	contained oneline start='\S\s\+"'ms=e	end='"'
 
 " TODO: feature request # line comments
 syn match rimlComment /^#.*/ contains=@Spell,rimlTodo
