@@ -6,6 +6,8 @@
 " Adapted from http://github.com/kchmck/vim-coffee-script
 " Credits to original author(s): Mick Koch, et all.
 "
+" Also includes comments syntax from vim.vim
+"
 " Notes:
 "
 " - Highlights Riml similar to coffeescript
