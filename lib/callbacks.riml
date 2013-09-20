@@ -1,0 +1,13 @@
+" manual callbacks "
+:function! SyntaxCheckers_riml_riml_IsAvailable()
+:return s:riml_syntax_checker.is_available()
+:endfunction
+
+:function! SyntaxCheckers_riml_riml_GetHighlightRegex(input)
+:return s:riml_syntax_checker.get_highlight_regex(a:input)
+:endfunction
+
+:function! SyntaxCheckers_riml_riml_GetLocList()
+:return s:riml_syntax_checker.get_loc_list()
+:endfunction
+
