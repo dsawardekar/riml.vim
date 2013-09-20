@@ -1,0 +1,128 @@
+riml_include 'dsl.riml'
+riml_include 'delegate.riml'
+riml_include 'error_format_builder.riml'
+riml_include 'syntastic_plugin.riml'
+
+class MockPlugin < SyntasticPlugin
+  
+  defm get_exe
+    return self.get_mocked('exe', false)
+  end
+
+  defm get_args
+    return self.get_mocked('args', false)
+  end
+
+  defm get_post_args
+    return self.get_mocked('post_args', false)
+  end
+
+  defm get_filetype
+    return self.get_mocked('filetype', false)
+  end
+
+  defm get_tail
+    return self.get_mocked('tail', false)
+  end
+
+  defm get_subchecker
+    return self.get_mocked('subchecker', false)
+  end
+
+  defm get_name
+    return self.get_mocked('name', false)
+  end
+
+  defm get_mocked(name, default)
+    if has_key(self, name)
+      return self[name]
+    else
+      return false
+    end
+  end
+
+  defm do_foo(*args)
+    self.do_foo_args = args
+    return self.do_foo_result
+  end
+
+  defm is_available
+    return self.available
+  end
+
+  defm get_highlight_regex(input)
+    return self.regex
+  end
+
+  defm get_loc_list
+    return self.loc_list
+  end
+
+end
+
+class SyntasticPluginSpec
+  defm describe
+    return 'SyntasticPluginSpec'
+  end
+
+  defm it_can_be_created
+    p = new SyntasticPlugin('')
+  end
+
+  defm it_does_not_add_option_if_false
+    p = new SyntasticPlugin('')
+    opts = {}
+    p.option(opts, 'foo', false)
+
+    expect(opts).to_not_have_key('foo')
+  end
+
+  defm it_does_add_option_if_present
+    p = new SyntasticPlugin('')
+    opts = {}
+    p.option(opts, 'foo', 'bar')
+
+    expect(opts).to_have_key('foo')
+    expect(opts.foo).to_equal('bar')
+  end
+
+  defm it_can_link_global_to_local_function
+    p = s:mock_plugin = new MockPlugin('mock_plugin')
+    p.name = 'my_plugin'
+    p.link('DoFoo', 'do_foo')
+    p.do_foo_result = ['e', 'f', 'g']
+
+    r = exists('g:Syntastic_my_plugin_DoFoo')
+
+    expect(r).to_not_equal(0)
+    res = g:Syntastic_my_plugin_DoFoo('a', 'b', 'c')
+
+    expect(p.do_foo_args).to_equal(['a', 'b', 'c'])
+    expect(res).to_equal(['e', 'f', 'g'])
+
+    :unlet s:mock_plugin
+  end
+
+  defm it_can_link_syntastic_globals
+    p = s:foo_plugin = new MockPlugin('foo_plugin')
+    p.name = 'foo_plugin'
+    p.available = true
+    p.regex = 'my_regex'
+    p.loc_list = 'my_loc_list'
+    p.register_callbacks()
+
+    expect(g:Syntastic_foo_plugin_IsAvailable()).to_equal(true)
+    expect(g:Syntastic_foo_plugin_GetHighlightRegex('line')).to_equal('my_regex')
+    expect(g:Syntastic_foo_plugin_GetLocList()).to_equal('my_loc_list')
+  end
+
+  defm it_can_build_makeprg_options
+    p = new MockPlugin('')
+    p.exe = 'ruby'
+    p.args = '-w'
+
+    opts = p.get_makeprg_options()
+    expect(opts.exe).to_equal('ruby')
+    expect(opts.args).to_equal('-w')
+  end
+end
