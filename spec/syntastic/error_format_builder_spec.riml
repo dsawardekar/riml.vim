@@ -1,0 +1,34 @@
+riml_include 'dsl.riml'
+riml_include 'error_format_builder.riml'
+
+class ErrorFormatBuilderSpec
+  defm describe
+    return 'ErrorFormatBuilderSpec'
+  end
+
+  defm it_can_store_error_entry
+    b = new ErrorFormatBuilder()
+    b.error('%-G%.%#')
+  end
+
+  defm it_can_store_error_message
+    b = new ErrorFormatBuilder()
+    r = b.error_msg('foo')
+
+    expect(r).to_match('foo')
+  end
+
+  defm it_can_build_errorformat1
+    b = new ErrorFormatBuilder()
+    b.error('a')
+    b.error('b')
+    b.error_msg('c')
+    b.error_msg('d')
+
+    msg = b.build()
+    expect(msg).to_match('a')
+    expect(msg).to_match('b')
+    expect(msg).to_match('c')
+    expect(msg).to_match('d')
+  end
+end

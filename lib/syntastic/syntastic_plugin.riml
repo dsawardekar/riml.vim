@@ -1,0 +1,112 @@
+class SyntasticPlugin
+  def initialize
+    self.err_builder = new ErrorFormatBuilder()
+  end
+
+  " configuration hooks "
+  defm get_exe
+    return false
+  end
+
+  defm get_args
+    return false
+  end
+
+  defm get_post_args
+    return false
+  end
+
+  defm get_filetype
+    return false
+  end
+
+  defm get_tail
+    return false
+  end
+
+  defm get_subchecker
+    return false
+  end
+
+  defm get_makeprg_options
+    opts = {}
+    self.option(opts, 'exe', self.get_exe())
+    self.option(opts, 'args', self.get_args())
+    self.option(opts, 'post_args', self.get_post_args())
+    self.option(opts, 'filetype', self.get_filetype())
+    self.option(opts, 'tail', self.get_tail())
+    self.option(opts, 'subchecker', self.get_subchecker())
+
+    return opts
+  end
+
+  defm get_makeprg
+    return syntastic#makeprg#build(self.get_makeprg_options())
+  end
+
+  defm get_errorformat
+    return self.err_builder.build()
+  end
+
+  defm make
+    opts = self.get_make_options()
+    :return SyntasticMake(opts)
+  end
+
+  defm get_make_options
+    opts = {}
+    opts.makeprg = self.get_makeprg()
+    opts.errorformat = self.get_errorformat()
+
+    return opts
+  end
+
+  " callback hooks "
+  defm is_available
+    return false
+  end
+
+  defm get_highlight_regex(input)
+    return ''
+  end
+
+  defm get_loc_list
+    return self.make()
+  end
+
+  defm get_name
+    return ''
+  end
+
+  " errorformat go here "
+  defm register_errors
+  end
+
+  defm error(entry)
+    self.err_builder.error(entry)
+  end
+
+  defm error_msg(msg)
+    self.err_builder.error_msg(msg)
+  end
+
+  " public api  "
+  defm register
+    self.register_errors()
+
+    opts = {}
+    opts.filetype = self.get_filetype()
+    opts.name = self.get_name()
+
+    g:SyntasticRegistry.CreateAndRegisterChecker(opts)
+  end
+
+  " helpers "
+  defm option(opts, key, value)
+    value_type = type(value)
+    if value_type != type(false) || value
+      opts[key] = value
+    end
+  end
+
+end
