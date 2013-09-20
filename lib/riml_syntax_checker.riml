@@ -1,0 +1,22 @@
+" ifdef "
+if exists('g:riml_syntastic_compiler_loaded')
+  finish
+else
+  g:riml_syntastic_compiler_loaded = true
+end
+
+" syntastic "
+riml_include 'error_format_builder.riml'
+riml_include 'syntastic_plugin.riml'
+
+" riml plugin "
+riml_include 'riml_syntastic_plugin.riml'
+
+" registration with syntastic "
+riml_syntax_checker = new RimlSyntasticPlugin()
+
+" manual callbacks "
+riml_include 'callbacks.riml'
+
+" start "
+riml_syntax_checker.register()

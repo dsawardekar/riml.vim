@@ -13,13 +13,13 @@ task :build do
   end
 end
 
-desc 'Compile compiler'
-task :compile_compiler => :build do
-  sh "bundle exec riml -c #{COMPILER_SOURCE} -I #{LIB_DIRS} -o #{COMPILER_OUTPUT_DIR}"
+desc 'Compile syntax_checker'
+task :compile_syntax_checker => :build do
+  sh "bundle exec riml -c #{SYNTASTIC_SOURCE} -I #{LIB_DIRS} -o #{SYNTASTIC_OUTPUT_DIR}"
 end
 
 desc 'Compile all'
-task :compile => [:compile_compiler]
+task :compile => [:compile_syntax_checker]
 
 desc 'Run all tests'
 task :test => [:build] do
@@ -28,6 +28,6 @@ end
 
 desc 'Move compiled files into vim directories'
 task :dist => [:compile] do
-  move_to COMPILER_OUTPUT, COMPILER_DEST
+  move_to SYNTASTIC_OUTPUT, SYNTASTIC_DEST
 end
 

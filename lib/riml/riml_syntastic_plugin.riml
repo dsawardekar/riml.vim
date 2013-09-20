@@ -1,0 +1,41 @@
+class RimlSyntasticPlugin < SyntasticPlugin
+  def initialize
+    super()
+  end
+
+  " configuration "
+  defm get_name
+    return 'riml'
+  end
+
+  defm get_exe
+    return 'riml'
+  end
+
+  defm get_args
+    return '--check'
+  end
+
+  defm get_filetype
+    return 'riml'
+  end
+
+  " errorformats "
+  " TODO: "
+  " - The line number reported in the status bar is correct for parser errors, but not for others"
+  " - The files matching %f are wrong, the compiler doesn't return the current file "
+  defm register_errors
+    " grammar.y:557:in `rescue in parse': on line 32:  (Riml::ParseError)
+    " parse error on value ">" (">")
+    self.error('%E%f:%n:%s: on line %l:%m')
+    self.error('%Z%m')
+
+    " /home/ ... /lexer.rb:203:in `tokenize_chunk': undefined method `size' for nil:NilClass (NoMethodError)
+    self.error("%f:%n:in `%s':%m")
+  end
+
+  " callbacks "
+  defm is_available
+    return executable('riml')
+  end
+end
