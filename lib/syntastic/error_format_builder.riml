@@ -1,0 +1,20 @@
+class ErrorFormatBuilder
+  def initialize
+    self.errors = []
+  end
+
+  defm error(entry)
+    add(self.errors, entry)
+    return entry
+  end
+
+  defm error_msg(msg)
+    entry = "%W%f(%l): #{msg}: %m"
+    self.error(entry)
+    return entry
+  end
+
+  defm build
+    return join(self.errors, ',')
+  end
+end
