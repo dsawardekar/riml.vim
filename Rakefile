@@ -28,6 +28,8 @@ end
 
 desc 'Move compiled files into vim directories'
 task :dist => [:compile] do
-  move_to SYNTASTIC_OUTPUT, SYNTASTIC_DEST
+  verbose VERBOSE do
+    move_to SYNTASTIC_OUTPUT, SYNTASTIC_DEST
+  end
 end
 
