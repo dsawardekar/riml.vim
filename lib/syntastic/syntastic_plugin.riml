@@ -1,6 +1,5 @@
 class SyntasticPlugin
-  def initialize(instance_name)
-    self.instance_name = instance_name
+  def initialize
     self.err_builder = new ErrorFormatBuilder()
   end
 
@@ -50,7 +49,8 @@ class SyntasticPlugin
   end
 
   defm make
-    return SyntasticMake(self.get_make_options())
+    opts = self.get_make_options()
+    :return SyntasticMake(opts)
   end
 
   defm get_make_options
@@ -71,26 +71,34 @@ class SyntasticPlugin
   end
 
   defm get_loc_list
-    return false
+    return self.make()
   end
 
   defm get_name
     return ''
   end
 
-  defm register_callbacks
-    self.link('IsAvailable', 'is_available')
-    self.link('GetHighlightRegex', 'get_highlight_regex')
-    self.link('GetLocList', 'get_loc_list')
+  " errorformat go here "
+  defm register_errors
   end
 
-  defm register_errors
+  defm error(entry)
+    self.err_builder.error(entry)
+  end
+
+  defm error_msg(msg)
+    self.err_builder.error_msg(msg)
   end
 
   " public api  "
   defm register
-    self.register_callbacks()
-    self.make()
+    self.register_errors()
+
+    opts = {}
+    opts.filetype = self.get_filetype()
+    opts.name = self.get_name()
+
+    g:SyntasticRegistry.CreateAndRegisterChecker(opts)
   end
 
   " helpers "
@@ -99,16 +107,6 @@ class SyntasticPlugin
     if value_type != type(false) || value
       opts[key] = value
     end
-  end
-
-  defm link(global, local)
-    global_name = "Syntastic_#{self.get_name()}_#{global}"
-    local_name = "#{local}_callback"
-    self[local_name] = create_delegate(self, local)
-
-    cmd = "let g:#{global_name} = s:#{self.instance_name}['#{local_name}']"
-    "get_logger().info(cmd)"
-    execute(cmd)
   end
 
 end

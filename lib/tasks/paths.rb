@@ -8,9 +8,11 @@ BUILD_DIR = 'build'
 # source paths
 LIB_DIR = 'lib'
 LIB_DIRS = build_riml_path([LIB_DIR])
-COMPILER_SOURCE = "#{LIB_DIR}/compiler/riml.riml"
-COMPILER_OUTPUT = "#{BUILD_DIR}/compiler/riml.vim"
-COMPILER_OUTPUT_DIR = File.dirname(COMPILER_OUTPUT)
+
+# syntastic 
+SYNTASTIC_SOURCE = "#{LIB_DIR}/riml_syntax_checker.riml"
+SYNTASTIC_OUTPUT = "#{BUILD_DIR}/riml_syntax_checker.vim"
+SYNTASTIC_OUTPUT_DIR = File.dirname(SYNTASTIC_OUTPUT)
 
 # test paths
 TEST_DIR = 'spec'
@@ -20,10 +22,10 @@ TEST_LIB_DIRS = build_riml_path([TEST_DIR])
 SPECKLE_LIB_DIRS = "#{LIB_DIRS}:#{TEST_LIB_DIRS}"
 
 # vim destinations
-COMPILER_DEST = 'compiler/riml.vim'
+SYNTASTIC_DEST = 'syntax_checkers/riml/riml.vim'
 
 # clean task config
 CLEAN.include("#{BUILD_DIR}/**/*.vim")
 CLEAN.include("#{BUILD_DIR}/**/*.log")
-CLEAN.include(COMPILER_DEST)
+CLEAN.include(SYNTASTIC_DEST)
 CLOBBER.include(BUILD_DIR)
